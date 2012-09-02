@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/manage_categories_items_cancel" android:showAsAction="always" android:title="Cancel"></item>
+    <item android:id="@+id/manage_categories_items_save" android:showAsAction="always" android:title="Save"></item>
+    
+
+</menu>
