@@ -1,28 +1,29 @@
 package com.timothy.moll.lets.go;
 
-import java.util.List;
-
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TableRow.LayoutParams;
+import com.timothy.moll.lets.go.R;
+import com.timothy.moll.lets.go.views.AllListsView;
+import com.timothy.moll.lets.go.views.CategoriesAndItemsView;
 
 public class MainScreen extends FragmentActivity implements ActionBar.TabListener {
 
@@ -77,11 +78,11 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         }
     }
 
-//    @Override
-//    public void onResume() {  // After a pause OR at startup
-//        super.onResume();
-//        this.notifyDataSetChanged();
-//	}
+    @Override
+    public void onResume() {  // After a pause OR at startup
+        super.onResume();
+        updateContent();
+	}
 
     
     @Override
@@ -102,13 +103,22 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
             case R.id.add_new_list:
             	loadManageList(null);
             	break;
-            case R.id.menu_settings:
-                //TODO
-                break;
     	}
     	return true;
     }
 
+    private void updateContent() {
+    	CategoriesAndItemsView view = (CategoriesAndItemsView) findViewById(CategoriesAndItemsView.id);
+    	if (view != null) {
+    		view.update();
+    	}
+    	
+    	AllListsView listsView = (AllListsView) findViewById(AllListsView.id);
+    	if (listsView != null) {
+    		listsView.update();
+    	}
+    }
+    
     private void loadManageList(String id) {
     	Intent intent = new Intent();
     	intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageList");
@@ -176,7 +186,8 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
      */
-    public static class DummySectionFragment extends Fragment {
+    public static class DummySectionFragment extends Fragment { 
+    	
         public DummySectionFragment() {
         }
 
@@ -189,70 +200,16 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         	Bundle args = getArguments();
         	switch(args.getInt(ARG_SECTION_NUMBER)) {
         		case 1:
-        			mainLayout = setupMainScreen();
+        			mainLayout = new AllListsView(getActivity());
         			break;
         		case 2:
-        			mainLayout = setupCIScreen();
+        			mainLayout = new CategoriesAndItemsView(getActivity());
         			break;
         	}
         	return mainLayout;
         }
         
-        private View setupMainScreen() {
-        	TableLayout mainLayout = new TableLayout(getActivity());
-        	DBHelper db = new DBHelper(getActivity());
-        	CategoriesAndItems CandA = db.getCategoriesAndItems();
-        	
-        	for (String list : CandA.getLists()) {
-        		ListTableRow listItem = new ListTableRow(getActivity());
-        		listItem.setName(list);
-        		mainLayout.addView(listItem);
-        	}
-        	
-        	if(mainLayout.getChildCount() == 0) {
-        		TextView tv = new TextView(getActivity(), null, android.R.attr.textAppearanceLarge);
-        		tv.setPadding(20, 0, 0, 0);
-        		tv.setText("No Lists added yet...");
-        		mainLayout.addView(tv);
-        	}
-        	
-        	return mainLayout;
-        }
 
-        private View setupCIScreen() {
-        	TableLayout mainLayout = new TableLayout(getActivity());
-        	mainLayout.setLayoutParams(new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-        	DBHelper db = new DBHelper(getActivity());
-        	CategoriesAndItems CandA = db.getCategoriesAndItems();
-        	
-        	for (String category : CandA.getCategories()) {
-        		CategoryListItem one = new CategoryListItem(getActivity());
-        		one.SetCategory(category);
-//        		one.addItem(Integer.toString(CandA.getItemsForCategory(category).size()));
-        		for (String item : CandA.getItemsForCategory(category)) {
-        			one.addItem(CandA.getItemText(item));
-        		}
-        		mainLayout.addView(one);
-        	}
-        	
-        	if(mainLayout.getChildCount() == 0) {
-        		TextView tv = new TextView(getActivity(), null, android.R.attr.textAppearanceLarge);
-        		tv.setPadding(20, 0, 0, 0);
-        		tv.setText("No Categories added yet...");
-        		mainLayout.addView(tv);
-        	}
-        	
-        	return mainLayout;
-        }
-        
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                Bundle savedInstanceState) {
-//            TextView textView = new Textfffthis.layout.addView(tv, ViewGroup.LayoutParams.FILL_PARENT, 50);View(getActivity());
-//            textView.setGravity(Gravity.CENTER);
-//            Bundle args = getArguments();
-//            textView.setText(Integer.toString(args.getInt(ARG_SECTION_NUMBER)));
-//            return textView;
-//        }
+
     }
 }

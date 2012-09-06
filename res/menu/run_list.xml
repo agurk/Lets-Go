@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/run_list_edit" android:title="Edit" android:showAsAction="always"></item>
+    <item android:id="@+id/run_list_delete" android:showAsAction="never" android:title="Delete"></item>
+    
+
+</menu>

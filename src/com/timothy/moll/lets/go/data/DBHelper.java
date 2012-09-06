@@ -1,0 +1,299 @@
+package com.timothy.moll.lets.go.data;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils.InsertHelper;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import com.timothy.moll.lets.go.R;
+
+public class DBHelper extends SQLiteOpenHelper {
+
+	private static final String DB_NAME = "lets_go_data";
+	private static final int DB_VERSION = 1;
+	
+	private static final String CATEGORIES_TABLE = "categories";
+	private static final String CATEGORY_NAME    = "category";
+	private static final String CATEGORY_ID      = "cat_id";
+	
+	private static final String ITEM_TABLE    = "items";
+	private static final String ITEM_NAME     = "item";
+	private static final String ITEM_CATEGORY = "category_id";
+	private static final String ITEM_ID       = "item_id";
+	
+	private static final String LIST_TABLE = "lists";
+	private static final String LIST_NAME  = "list";
+	private static final String LIST_ID    = "list_id";
+	
+	private static final String LIST_ITEMS_TABLE   = "list_items";
+	private static final String LIST_ITEMS_NAME    = "list_id_LIN";
+	private static final String LIST_ITEMS_ITEM    = "item_id_LIN";
+	private static final String LIST_ITEMS_CHECKED = "checked_state";
+	private static final String LIST_ITEMS_ID      = "list_item_id";
+	
+	
+	public DBHelper(Context context) {
+		  super(context, DB_NAME, null, DB_VERSION); 
+		  }
+	
+	public void onCreate(SQLiteDatabase db) {
+		db.execSQL("CREATE TABLE " + CATEGORIES_TABLE + " ("
+					+ CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ CATEGORY_NAME + " TEXT)" );
+		
+		db.execSQL("CREATE TABLE " + ITEM_TABLE + " ("
+				+ ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ ITEM_NAME + " TEXT, "
+				+ ITEM_CATEGORY + " INTEGER)");
+		
+		db.execSQL("CREATE TABLE " + LIST_TABLE + " ("
+				+ LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ LIST_NAME + " TEXT)" );
+		
+		db.execSQL("CREATE TABLE " + LIST_ITEMS_TABLE + " ("
+				+ LIST_ITEMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ LIST_ITEMS_NAME + " INTEGER, "
+				+ LIST_ITEMS_ITEM + " INTEGER, "
+				+ LIST_ITEMS_CHECKED + " INTEGER)");
+	}
+	
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + LIST_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + LIST_ITEMS_TABLE);
+		
+		onCreate(db);
+	}
+	
+	private List<Item> getItemsForCategory(String categoryId) {
+		List<Item> items = new ArrayList<Item>();
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		String selectQuery = "SELECT "+ITEM_ID + ", "+ITEM_NAME
+							+ " FROM " + ITEM_TABLE
+							+ " WHERE " + ITEM_CATEGORY + " = " + categoryId;       
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+        	do {
+        		Item item = new Item(cursor.getString(0), cursor.getString(1), Boolean.TRUE);
+        		items.add(item);
+        	} while (cursor.moveToNext());
+        }
+		
+		return items;
+	}
+	
+	@Deprecated
+	public CategoriesAndItems getCategoriesAndItems() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		
+		String selectQuery = "SELECT "+CATEGORY_ID + ", "+CATEGORY_NAME+" FROM " + CATEGORIES_TABLE;       
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        List<Category> categories = new ArrayList<Category>();
+		if (cursor.moveToFirst()) {
+            do {
+            	Category category = new Category(cursor.getString(0), cursor.getString(1), getItemsForCategory(cursor.getString(0)));
+            	categories.add(category);
+            } while (cursor.moveToNext());
+        }
+
+		selectQuery = "SELECT " + CATEGORY_NAME + ", " + ITEM_TABLE +"." +ITEM_ID
+						+ " FROM " + CATEGORIES_TABLE + ", " + ITEM_TABLE 
+						+" WHERE "  + CATEGORY_ID + " = "  + ITEM_CATEGORY;
+        cursor = db.rawQuery(selectQuery, null);
+        Map<String, String> itemRelationship = new HashMap<String, String>();
+		if (cursor.moveToFirst()) {
+			do {
+				// returning item, category
+				itemRelationship.put(cursor.getString(1), cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		
+		
+		selectQuery = "SELECT " + ITEM_ID + ", " + ITEM_NAME
+				+ " FROM " + ITEM_TABLE;
+		cursor = db.rawQuery(selectQuery, null);
+		Map<String, String> items = new HashMap<String, String>();
+		if (cursor.moveToFirst()) {
+			do {
+				// returning id, item
+				items.put(cursor.getString(0), cursor.getString(1));
+			} while (cursor.moveToNext());
+		}
+		
+		return  new CategoriesAndItems(categories, items, itemRelationship, this);
+	}
+	
+	public ListData getList(String id) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selectQuery = "SELECT " + LIST_NAME
+					+ " FROM " + LIST_TABLE
+					+ " WHERE " + LIST_ID + " = " + id;
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		cursor.moveToFirst();
+		String listName = cursor.getString(0);
+		
+		List<Category> categories = new ArrayList<Category>();
+		for (Map.Entry<String, String> entry : getCategoriesForList(id).entrySet()) {
+			Category category = new Category(entry.getValue(), entry.getKey(), getItemsForCategory(id, entry.getValue()));
+			categories.add(category);
+		}
+		
+		return new ListData(id, listName, categories);
+	}
+	
+	@Deprecated
+	public List<ListData> getLists() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selectQuery = "SELECT " + LIST_NAME + ", " + LIST_ID
+					+ " FROM " + LIST_TABLE;
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		List<ListData> lists = new ArrayList<ListData>();
+		if (cursor.moveToFirst()) {
+			do {
+				ListData list = new ListData(cursor.getString(1), cursor.getString(0), null);
+				lists.add(list);
+			} while (cursor.moveToNext());
+		}
+		return lists;
+	}
+	
+	
+	
+	public void addCategory(String category) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CATEGORY_NAME, category);
+        db.insert(CATEGORIES_TABLE, null, values);
+        db.close();
+	}
+	
+	public void addItem(String item, String categoryId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ITEM_NAME, item);
+        values.put(ITEM_CATEGORY, categoryId);
+        db.insert(ITEM_TABLE, null, values);
+        db.close();
+	}
+
+	public String addList(String listName, List<String> categories) {
+		SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LIST_NAME, listName);
+//        values.put(ITEM_CATEGORY, categoryId);
+        Long foo = db.insert(LIST_TABLE, null, values);
+        db.close();
+        return foo.toString();
+	}
+	
+	@Deprecated
+	public void updateListItems(String id, List<String> items, String UN_USED) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
+					+ " WHERE " + LIST_ITEMS_NAME
+					+ " = " + id);
+		
+		InsertHelper ih = new InsertHelper(db, LIST_ITEMS_TABLE);
+		final int list_items_name    = ih.getColumnIndex(LIST_ITEMS_NAME);
+		final int list_items_item    = ih.getColumnIndex(LIST_ITEMS_ITEM);
+		final int list_items_checked = ih.getColumnIndex(LIST_ITEMS_CHECKED); 
+		
+		try {
+			for (String item: items) {
+				
+				ih.prepareForInsert();
+				
+				ih.bind(list_items_name, id);
+				ih.bind(list_items_item, item);
+				ih.bind(list_items_checked, Boolean.toString(false));
+				
+				ih.execute();
+			}
+		} finally {
+			ih.close();
+		}
+        db.close();
+	}
+
+	public void updateListItems(String id, List<Item> items) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
+					+ " WHERE " + LIST_ITEMS_NAME
+					+ " = " + id);
+		
+		for (Item item: items) {
+			ContentValues values = new ContentValues();
+			values.put(LIST_ITEMS_NAME, id);
+			values.put(LIST_ITEMS_ITEM, item.getId());
+			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isChecked()));
+			db.insert(LIST_ITEMS_TABLE, null, values);
+		}
+        db.close();
+	}
+	
+	private Map<String, String> getCategoriesForList(String listId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selectQuery = "SELECT DISTINCT " + CATEGORY_NAME + ", " + CATEGORY_ID
+					+ " FROM " + CATEGORIES_TABLE + ", " + ITEM_TABLE + ", " + LIST_ITEMS_TABLE 
+					+ " WHERE " + LIST_ITEMS_NAME + " = " + listId
+					+ " AND " + LIST_ITEMS_ITEM + " = " + ITEM_ID
+					+ " AND " + ITEM_CATEGORY + " = " + CATEGORY_ID;
+		Cursor cursor = db.rawQuery(selectQuery, null);
+        Map<String, String> categories = new HashMap<String, String>();
+		if (cursor.moveToFirst()) {
+			do { categories.put(cursor.getString(0), cursor.getString(1)); } while (cursor.moveToNext());
+		}
+		return categories;
+	}
+	
+	public List<Item> getItemsForCategory(String listId, String categoryId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selectQuery = "SELECT  " + ITEM_NAME + ", " + ITEM_ID + ", " + LIST_ITEMS_CHECKED
+					+ " FROM " + CATEGORIES_TABLE + ", " + ITEM_TABLE + ", " + LIST_ITEMS_TABLE 
+					+ " WHERE " + LIST_ITEMS_NAME + " = " + listId
+					+ " AND " + CATEGORY_ID + " = " + categoryId
+					+ " AND " + ITEM_CATEGORY + " = " + CATEGORY_ID
+					+ " AND " + LIST_ITEMS_ITEM + " = " + ITEM_ID;
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		List<Item> items= new ArrayList<Item>();
+		if (cursor.moveToFirst()) {
+			do {
+				Item item = new Item(cursor.getString(1), cursor.getString(0), Boolean.parseBoolean(cursor.getString(2)));
+				items.add(item);
+			} while (cursor.moveToNext());
+		}
+		return items;
+	}
+	
+	public void deleteList(String listId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
+					+ " WHERE " + LIST_ITEMS_NAME
+					+ " = " + listId);
+		db.execSQL("DELETE FROM " + LIST_TABLE
+				+ " WHERE " + LIST_ID
+				+ " = " + listId);
+		db.close();
+	}
+	
+	public void updateListName(String listId, String listName) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues args = new ContentValues();
+		args.put(LIST_NAME, listName);
+		db.update(LIST_TABLE, args, LIST_ID + " = " + listId, null);
+		db.close();
+	}
+}

@@ -1,42 +1,40 @@
-package com.timothy.moll.lets.go;
+package com.timothy.moll.lets.go.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
 
+import com.timothy.moll.lets.go.R;
+
 public class CategoriesAndItems {
 	
 	private DBHelper db;
 	
-	private Map<String, String> categories;
+//	private Map<String, String> categories;
+	private List<Category> categories;
 	private Map<String, String> items;
 	private Map<String, String> itemRelationships;
-	private List<String> lists;
 	
-	public CategoriesAndItems (Map<String, String> categories, Map<String, String> items,
-								Map<String, String> itemRelationships, List<String> lists, DBHelper db) {
+	public CategoriesAndItems (List<Category> categories, Map<String, String> items,
+								Map<String, String> itemRelationships, DBHelper db) {
 		this.categories = categories;
 		this.items = items;
 		this.itemRelationships = itemRelationships;
-		this.lists = lists;
 		this.db = db;
 	}
 
-	public List<String> getCategories() {
+	@Deprecated
+	public List<String> getCategoryNames() {
 		List<String> categoryName = new ArrayList<String>();
-		for (Map.Entry<String, String> entry : this.categories.entrySet()) {
-			categoryName.add(entry.getKey());
+		for (Category entry : this.categories) {
+			categoryName.add(entry.getName());
 		}
 		return categoryName;
 	}
 	
-	public Map<String, String> getCategoriesWithID() {
-		return this.categories;
-	}
-	
+	@Deprecated
 	public List<String> getItemsForCategory(String id) {
 		ArrayList<String> matchingItems = new ArrayList<String>();
 		for (Map.Entry<String, String> entry : this.itemRelationships.entrySet()) {
@@ -52,19 +50,11 @@ public class CategoriesAndItems {
 		return this.items.get(id);
 	}
 	
+	@Deprecated
 	public Map<String, String> getAllItems() {
 		return this.items;
 	}
-//	
-//	public Map<String, String> getItemsForCategoryWithID(String id) {
-//		Map<String, String> items = new HashMap<String, String>();
-//		for (Map.Entry<String, String> entry : this.items.entrySet()) {
-//			if(entry.getValue().equals(id)) {
-//				items.put(entry.getKey(), entry.getValue());
-//			}
-//		}
-//		return items;
-//	}
+
 	
 	public Map<String, String> getItemRelationships() {
 		return this.itemRelationships;
@@ -76,25 +66,21 @@ public class CategoriesAndItems {
 		}
 	}
 	
+	@Deprecated
 	public void updateItem(String id, String item, String category) {
-		String categoryId = this.categories.get(category);
-		Log.w("CatID", categoryId);
+		String categoryId = null;
+		for (Category category2 : categories) {
+			if (category2.getName().equals(category)) {
+				categoryId = category2.getId();
+			}
+		}
 		if (id == null) {
 			db.addItem(item, categoryId);
 		}
 	}
-	
-	public List<String> getLists() {
-		return this.lists;
-	}
-	
-	public void updateList(String listId, String listName, List<String> items) {
-		if (listId == null) {
-			listId = db.addList(listName, items);
-		} else {
-			// TODO update list details
-		}
-		db.updateListItems(listId, items);
+
+	public List<Category> getCategories() {
+		return categories;
 	}
 	
 }

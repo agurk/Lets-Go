@@ -1,4 +1,4 @@
-package com.timothy.moll.lets.go;
+package com.timothy.moll.lets.go.views;
 
 import android.content.Context;
 import android.view.View;
@@ -7,12 +7,17 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.timothy.moll.lets.go.R;
+import com.timothy.moll.lets.go.data.Category;
+import com.timothy.moll.lets.go.data.Item;
 
 public class CategoryListItem extends TableRow {
 
-	private TextView category;
+	private TextView categoryName;
 	private LinearLayout layout;
 	private TableLayout items;
+	
+	private Category category;
 	
 	public CategoryListItem(Context context) {
 		super(context);
@@ -26,25 +31,32 @@ public class CategoryListItem extends TableRow {
 		this.addView(this.layout);
 		this.setPadding(0, 0, 0, 30);
 		
-		this.category = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
-		this.category.setPadding(20, 0, 0, 5);
+		this.categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
+		this.categoryName.setPadding(20, 0, 0, 5);
 
 		View ruler = new View(this.getContext());
-		ruler.setBackgroundColor(0xFF00FF00);
+		ruler.setBackgroundColor(0xFF0000FF);
 
 		this.items = new TableLayout(this.getContext());
 		
-		this.layout.addView(this.category);
+		this.layout.addView(this.categoryName);
 		this.layout.addView(ruler,ViewGroup.LayoutParams.FILL_PARENT, 2);
 		this.layout.addView(this.items);
 	}
 	
-	
-	public void SetCategory(String category) {
-		this.category.setText(category);
+	public void addCategory(Category category) {
+		this.category = category;
+		setCategoryName(category.getName());
+		for (Item item : category.getItems()) {
+			addItem(item.getName());
+		}
 	}
 	
-	public void addItem(String item) {
+	private void setCategoryName(String category) {
+		this.categoryName.setText(category);
+	}
+	
+	private void addItem(String item) {
 		TableRow row = new TableRow(this.getContext());
 		this.items.addView(row);
 		TextView itemName = new TextView(this.getContext(), null, android.R.attr.textAppearanceMedium);

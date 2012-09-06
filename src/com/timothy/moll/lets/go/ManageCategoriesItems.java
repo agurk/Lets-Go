@@ -9,6 +9,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import com.timothy.moll.lets.go.R;
+import com.timothy.moll.lets.go.data.CategoriesAndItems;
+import com.timothy.moll.lets.go.data.DBHelper;
 
 public class ManageCategoriesItems extends Activity {
 	
@@ -16,6 +21,8 @@ public class ManageCategoriesItems extends Activity {
 	
 	private TYPE type;
 	private String id;
+	
+	private TextView typeName;
 	
 	private RadioGroup categoryGroup;
 	
@@ -27,10 +34,15 @@ public class ManageCategoriesItems extends Activity {
 	     actionBar.setDisplayHomeAsUpEnabled(true);
 	     actionBar.show();
 	     
+	     typeName = (TextView) findViewById(R.id.category_item_type);
+	     
 	     type = TYPE.valueOf(getIntent().getExtras().getString("TYPE"));
 	     id = getIntent().getExtras().getString("ID");
 	     if (type.equals(TYPE.ITEM)) {
 	    	 showCategories(id);
+	    	 typeName.setText("Item Name");
+	     } else {
+	    	 typeName.setText("Category Name");
 	     }
 	 }
 	 
@@ -61,7 +73,7 @@ public class ManageCategoriesItems extends Activity {
 		 
 		 DBHelper db = new DBHelper(this);
 		 CategoriesAndItems CandA = db.getCategoriesAndItems();
-		 for(String category : CandA.getCategories()) {
+		 for(String category : CandA.getCategoryNames()) {
 			 RadioButton rb = new RadioButton(this);
 			 rb.setText(category);
 			 this.categoryGroup.addView(rb);
