@@ -3,8 +3,6 @@ package com.timothy.moll.lets.go.views;
 import com.timothy.moll.lets.go.data.CategoriesAndItems;
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.DBHelper;
-import com.timothy.moll.lets.go.data.Item;
-
 import android.content.Context;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -23,7 +21,7 @@ public class CategoriesAndItemsView extends ScrollView {
 	
 	private void setupScreen() {
     	TableLayout mainLayout = new TableLayout(getContext());
-    	mainLayout.setLayoutParams(new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+    	mainLayout.setLayoutParams(new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     	DBHelper db = new DBHelper(getContext());
     	CategoriesAndItems CandA = db.getCategoriesAndItems();
     	

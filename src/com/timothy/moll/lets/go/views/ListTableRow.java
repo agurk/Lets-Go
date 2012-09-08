@@ -2,10 +2,8 @@ package com.timothy.moll.lets.go.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.timothy.moll.lets.go.R;
 
 public class ListTableRow extends TableRow {
 

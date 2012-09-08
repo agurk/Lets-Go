@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.timothy.moll.lets.go.R;
-import com.timothy.moll.lets.go.ManageCategoriesItems.TYPE;
 import com.timothy.moll.lets.go.data.CategoriesAndItems;
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.DBHelper;

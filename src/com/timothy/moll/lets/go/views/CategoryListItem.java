@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.timothy.moll.lets.go.R;
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
 
@@ -26,7 +25,7 @@ public class CategoryListItem extends TableRow {
 
 	private void createMainLayout() {
 		this.layout = new LinearLayout(this.getContext());
-		this.layout.setLayoutParams(new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		this.layout.setLayoutParams(new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		this.layout.setOrientation(LinearLayout.VERTICAL);
 		this.addView(this.layout);
 		this.setPadding(0, 0, 0, 30);
@@ -40,7 +39,7 @@ public class CategoryListItem extends TableRow {
 		this.items = new TableLayout(this.getContext());
 		
 		this.layout.addView(this.categoryName);
-		this.layout.addView(ruler,ViewGroup.LayoutParams.FILL_PARENT, 2);
+		this.layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
 		this.layout.addView(this.items);
 	}
 	

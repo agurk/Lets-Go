@@ -2,11 +2,7 @@ package com.timothy.moll.lets.go.views;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -14,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import com.timothy.moll.lets.go.R;
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
 
@@ -24,7 +19,7 @@ public class SelectableCategoryItemList extends TableLayout{
 	
 	public SelectableCategoryItemList(Context context) {
 		super(context);
-		this.setLayoutParams(new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		this.setLayoutParams(new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		itemCheckBoxes = new ArrayList<String>();
 	}
 
@@ -95,7 +90,7 @@ class CategoryItemLayout extends TableRow {
 		ruler.setBackgroundColor(0xFF0000FF);
 		
 		layout.addView(categoryName);
-		layout.addView(ruler,ViewGroup.LayoutParams.FILL_PARENT, 2);
+		layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
 		layout.addView(createItems(category.getItems()));
 		this.items = category.getItems();
 		this.addView(layout);

@@ -26,9 +26,10 @@ public final class R {
         public static final int manage_list_cancel=0x7f07000a;
         public static final int manage_list_save=0x7f07000b;
         public static final int pager=0x7f070000;
-        public static final int run_list_delete=0x7f07000d;
+        public static final int run_list_delete=0x7f07000e;
         public static final int run_list_edit=0x7f07000c;
         public static final int run_list_layout=0x7f070004;
+        public static final int run_list_save=0x7f07000d;
     }
     public static final class layout {
         public static final int main_screen=0x7f030000;

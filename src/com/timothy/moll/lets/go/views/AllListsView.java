@@ -1,7 +1,5 @@
 package com.timothy.moll.lets.go.views;
 
-import com.timothy.moll.lets.go.data.CategoriesAndItems;
-import com.timothy.moll.lets.go.data.DBHelper;
 import com.timothy.moll.lets.go.data.Lists;
 
 import android.content.Context;
@@ -47,7 +45,7 @@ public class AllListsView extends ScrollView {
     		
     		View ruler = new View(this.getContext());
     		ruler.setBackgroundColor(0x00000000);
-    		tableLayout.addView(ruler,ViewGroup.LayoutParams.FILL_PARENT, 5);
+    		tableLayout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 5);
     	}
     	
     	if(tableLayout.getChildCount() == 0) {

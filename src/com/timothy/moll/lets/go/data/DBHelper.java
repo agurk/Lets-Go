@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.timothy.moll.lets.go.R;
 
 public class DBHelper extends SQLiteOpenHelper {
 

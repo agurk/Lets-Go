@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
-import com.timothy.moll.lets.go.R;
-
 public class CategoriesAndItems {
 	
 	private DBHelper db;

@@ -51,9 +51,13 @@ public class RunList extends Activity {
 		 case R.id.run_list_delete:
 			 delete();
 			 finish();
+			 break;
 		 case android.R.id.home:
 			 save();
 			 finish();
+			 break;
+		 case R.id.run_list_save:
+			 save();
 			 break;
       }
 		 return true;
