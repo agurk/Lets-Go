@@ -25,4 +25,8 @@ public class Category {
 	public List<Item> getItems() {
 		return items;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

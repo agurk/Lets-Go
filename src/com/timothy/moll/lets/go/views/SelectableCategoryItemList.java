@@ -2,6 +2,7 @@ package com.timothy.moll.lets.go.views;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
 
@@ -48,8 +50,8 @@ public class SelectableCategoryItemList extends TableLayout{
 		List<Item> items = new ArrayList<Item>();
 		for (String id: this.itemCheckBoxes) {
 			CheckBox cb = (CheckBox) findViewById(Integer.parseInt(id));
-			// TODO set name (not null)
-			Item item = new Item(id, null, cb.isChecked());
+			// TODO set name, category
+			Item item = new Item(id, null, cb.isChecked(),null);
 			items.add(item);
 		}
 		return items;

@@ -9,14 +9,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import com.timothy.moll.lets.go.R;
+
 import com.timothy.moll.lets.go.views.AllListsView;
-import com.timothy.moll.lets.go.views.CategoriesAndItemsView;
 
 public class MainScreen extends FragmentActivity implements ActionBar.TabListener {
 
@@ -88,10 +84,10 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     public boolean onOptionsItemSelected(MenuItem item){
     	switch(item.getItemId()) {
     		case R.id.add_category:
-    			loadManageCategoriesItem(ManageCategoriesItems.TYPE.CATEGORY, null);
+    			loadManageCategory(null);
                 break;
             case R.id.add_item:
-                loadManageCategoriesItem(ManageCategoriesItems.TYPE.ITEM, null);
+                loadManageItem(null);
             	break;
             case R.id.add_new_list:
             	loadManageList(null);
@@ -101,15 +97,11 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     }
 
     private void updateContent() {
-    	CategoriesAndItemsView view = (CategoriesAndItemsView) findViewById(CategoriesAndItemsView.id);
-    	if (view != null) {
-    		view.update();
-    	}
+    	AllListItems aLI = (AllListItems) mSectionsPagerAdapter.getItem(0);
+    	aLI.updateView(this);
     	
-    	AllListsView listsView = (AllListsView) findViewById(AllListsView.id);
-    	if (listsView != null) {
-    		listsView.update();
-    	}
+    	AllCategoriesAndItems aCAI = (AllCategoriesAndItems) mSectionsPagerAdapter.getItem(1);
+    	aCAI.updateView(this);
     }
     
     private void loadManageList(String id) {
@@ -118,12 +110,19 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         intent.putExtra("ID", id);
         startActivity(intent);
     }
+
+//  null String for id to indicate we want a new one
+    private void loadManageItem(String id) {
+    	Intent intent = new Intent();
+    	intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageItem");
+        intent.putExtra("ID", id);
+        startActivity(intent);
+    }
     
 //  null String for id to indicate we want a new one
-    private void loadManageCategoriesItem(ManageCategoriesItems.TYPE type, String id) {
+    private void loadManageCategory(String id) {
     	Intent intent = new Intent();
-    	intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageCategoriesItems");
-        intent.putExtra("TYPE", type.toString());
+    	intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageCategory");
         intent.putExtra("ID", id);
         startActivity(intent);
     }
@@ -154,11 +153,13 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DummySectionFragment();
-            Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-            fragment.setArguments(args);
-            return fragment;
+        	switch(i) {
+        		case 0:
+        			return new AllListItems();
+        		case 1:
+        			return new AllCategoriesAndItems();
+        	}
+        	return null;
         }
 
         @Override
@@ -174,35 +175,5 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
             }
             return null;
         }
-    }
-
-    /**
-     * A dummy fragment representing a section of the app, but that simply displays dummy text.
-     */
-    public static class DummySectionFragment extends Fragment { 
-    	
-        public DummySectionFragment() {
-        }
-
-        public static final String ARG_SECTION_NUMBER = "section_number";
-        
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        			Bundle savedInstanceState) {
-        	View mainLayout = null;
-        	Bundle args = getArguments();
-        	switch(args.getInt(ARG_SECTION_NUMBER)) {
-        		case 1:
-        			mainLayout = new AllListsView(getActivity());
-        			break;
-        		case 2:
-        			mainLayout = new CategoriesAndItemsView(getActivity());
-        			break;
-        	}
-        	return mainLayout;
-        }
-        
-
-
     }
 }

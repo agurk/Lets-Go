@@ -2,6 +2,7 @@ package com.timothy.moll.lets.go.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -23,11 +24,6 @@ public class Lists {
 	}
 	
 	@Deprecated
-	public Lists(List<ListData> lists, DBHelper db) {
-		this.lists = lists;
-		this.db = db;
-	}
-	
 	public List<String> getListNames() {
 		List<String> lists = new ArrayList<String>();
 		for(ListData list : this.lists) {
@@ -36,8 +32,11 @@ public class Lists {
 		return lists;
 	}
 	
+	public List<ListData> getBasicLists() {
+		return this.lists;
+	}
+	
 	public ListData getList(String id) {
-		Log.w("HERE", id);
 		return db.getList(id);
 	}
 	

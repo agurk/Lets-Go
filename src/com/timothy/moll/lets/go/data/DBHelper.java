@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils.InsertHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -37,9 +38,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String LIST_ITEMS_ID      = "list_item_id";
 	
 	
-	public DBHelper(Context context) {
+	protected DBHelper(Context context) {
 		  super(context, DB_NAME, null, DB_VERSION); 
-		  }
+	}
 	
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + CATEGORIES_TABLE + " ("
@@ -81,7 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
         	do {
-        		Item item = new Item(cursor.getString(0), cursor.getString(1), Boolean.TRUE);
+        		Item item = new Item(cursor.getString(0), cursor.getString(1), Boolean.TRUE, categoryId);
         		items.add(item);
         	} while (cursor.moveToNext());
         }
@@ -89,10 +90,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		return items;
 	}
 	
-	@Deprecated
-	public CategoriesAndItems getCategoriesAndItems() {
+	protected List<Category> getCategories() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
 		
 		String selectQuery = "SELECT "+CATEGORY_ID + ", "+CATEGORY_NAME+" FROM " + CATEGORIES_TABLE;       
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -103,11 +102,32 @@ public class DBHelper extends SQLiteOpenHelper {
             	categories.add(category);
             } while (cursor.moveToNext());
         }
+		
+		db.close();
+		return categories;
+	}
+	
+	protected Category getCategoryById(String id) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String selectQuery = "SELECT "+CATEGORY_ID + ", "+CATEGORY_NAME+" FROM " + CATEGORIES_TABLE
+							+ " WHERE " + CATEGORY_ID + " = " + id;       
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        Category category = new Category(cursor.getString(0), cursor.getString(1), getItemsForCategory(cursor.getString(0)));
 
-		selectQuery = "SELECT " + CATEGORY_NAME + ", " + ITEM_TABLE +"." +ITEM_ID
+		db.close();
+		
+		return category;
+	}
+
+	protected Map<String, String> getItemRelationships() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String selectQuery = "SELECT " + CATEGORY_NAME + ", " + ITEM_TABLE +"." +ITEM_ID
 						+ " FROM " + CATEGORIES_TABLE + ", " + ITEM_TABLE 
 						+" WHERE "  + CATEGORY_ID + " = "  + ITEM_CATEGORY;
-        cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, null);
         Map<String, String> itemRelationship = new HashMap<String, String>();
 		if (cursor.moveToFirst()) {
 			do {
@@ -116,22 +136,28 @@ public class DBHelper extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		
-		
-		selectQuery = "SELECT " + ITEM_ID + ", " + ITEM_NAME
+		db.close();
+		return itemRelationship;
+	}
+	
+	protected List<Item> getItems() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		String selectQuery = "SELECT " + ITEM_ID + ", " + ITEM_NAME + ", " + ITEM_CATEGORY
 				+ " FROM " + ITEM_TABLE;
-		cursor = db.rawQuery(selectQuery, null);
-		Map<String, String> items = new HashMap<String, String>();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		List<Item> items = new ArrayList<Item>();
 		if (cursor.moveToFirst()) {
 			do {
-				// returning id, item
-				items.put(cursor.getString(0), cursor.getString(1));
+				Item item = new Item(cursor.getString(0), cursor.getString(1), false, cursor.getString(2));
+				items.add(item);
+				Log.w("found item", item.getName());
 			} while (cursor.moveToNext());
 		}
 		
-		return  new CategoriesAndItems(categories, items, itemRelationship, this);
+		return items;
 	}
 	
-	public ListData getList(String id) {
+	protected ListData getList(String id) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String selectQuery = "SELECT " + LIST_NAME
@@ -150,8 +176,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return new ListData(id, listName, categories);
 	}
 	
-	@Deprecated
-	public List<ListData> getLists() {
+	protected List<ListData> getLists() {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String selectQuery = "SELECT " + LIST_NAME + ", " + LIST_ID
@@ -169,24 +194,24 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	
 	
-	public void addCategory(String category) {
+	protected void addCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(CATEGORY_NAME, category);
+        values.put(CATEGORY_NAME, category.getName());
         db.insert(CATEGORIES_TABLE, null, values);
         db.close();
 	}
 	
-	public void addItem(String item, String categoryId) {
+	protected void addItem(Item item) {
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ITEM_NAME, item);
-        values.put(ITEM_CATEGORY, categoryId);
+        values.put(ITEM_NAME, item.getName());
+        values.put(ITEM_CATEGORY, item.getCategoryId());
         db.insert(ITEM_TABLE, null, values);
         db.close();
 	}
 
-	public String addList(String listName, List<String> categories) {
+	protected String addList(String listName, List<String> categories) {
 		SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(LIST_NAME, listName);
@@ -197,7 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	@Deprecated
-	public void updateListItems(String id, List<String> items, String UN_USED) {
+	protected void updateListItems(String id, List<String> items, String UN_USED) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
 					+ " WHERE " + LIST_ITEMS_NAME
@@ -225,7 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 	}
 
-	public void updateListItems(String id, List<Item> items) {
+	protected void updateListItems(String id, List<Item> items) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
 					+ " WHERE " + LIST_ITEMS_NAME
@@ -257,7 +282,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return categories;
 	}
 	
-	public List<Item> getItemsForCategory(String listId, String categoryId) {
+	protected List<Item> getItemsForCategory(String listId, String categoryId) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String selectQuery = "SELECT  " + ITEM_NAME + ", " + ITEM_ID + ", " + LIST_ITEMS_CHECKED
@@ -270,14 +295,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		List<Item> items= new ArrayList<Item>();
 		if (cursor.moveToFirst()) {
 			do {
-				Item item = new Item(cursor.getString(1), cursor.getString(0), Boolean.parseBoolean(cursor.getString(2)));
+				Item item = new Item(cursor.getString(1), cursor.getString(0), Boolean.parseBoolean(cursor.getString(2)), categoryId);
 				items.add(item);
 			} while (cursor.moveToNext());
 		}
 		return items;
 	}
 	
-	public void deleteList(String listId) {
+	protected void deleteList(String listId) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
 					+ " WHERE " + LIST_ITEMS_NAME
@@ -287,12 +312,30 @@ public class DBHelper extends SQLiteOpenHelper {
 				+ " = " + listId);
 		db.close();
 	}
-	
-	public void updateListName(String listId, String listName) {
+
+	protected void updateListName(String listId, String listName) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues args = new ContentValues();
 		args.put(LIST_NAME, listName);
 		db.update(LIST_TABLE, args, LIST_ID + " = " + listId, null);
+		db.close();
+	}
+
+	protected void updateItem(Item item) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues args = new ContentValues();
+		args.put(ITEM_NAME, item.getName());
+		args.put(ITEM_CATEGORY, item.getCategoryId());
+		db.update(ITEM_TABLE, args, ITEM_ID + " = " + item.getId(), null);
+		db.close(); 
+	}
+	
+	// TODO: only updates name. Do I want to update items too?
+	protected void updateCategory(Category category) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues args = new ContentValues();
+		args.put(CATEGORY_NAME, category.getName());
+		db.update(CATEGORIES_TABLE, args, CATEGORY_ID + " = " + category.getId(), null);
 		db.close();
 	}
 }

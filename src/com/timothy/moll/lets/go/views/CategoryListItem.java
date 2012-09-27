@@ -1,12 +1,16 @@
 package com.timothy.moll.lets.go.views;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
 
@@ -15,9 +19,7 @@ public class CategoryListItem extends TableRow {
 	private TextView categoryName;
 	private LinearLayout layout;
 	private TableLayout items;
-	
-	private Category category;
-	
+		
 	public CategoryListItem(Context context) {
 		super(context);
 		createMainLayout();
@@ -44,25 +46,48 @@ public class CategoryListItem extends TableRow {
 	}
 	
 	public void addCategory(Category category) {
-		this.category = category;
 		setCategoryName(category.getName());
 		for (Item item : category.getItems()) {
-			addItem(item.getName());
+			addItem(item);
 		}
+		final String categoryId = category.getId();
+		categoryName.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageCategory");
+				intent.putExtra("ID",categoryId);
+				getContext().startActivity(intent);					
+			}
+			
+		});
 	}
 	
 	private void setCategoryName(String category) {
 		this.categoryName.setText(category);
 	}
 	
-	private void addItem(String item) {
+	private void addItem(Item item) {
+		Log.w("Adding item",item.getName()); 
 		TableRow row = new TableRow(this.getContext());
 		this.items.addView(row);
 		TextView itemName = new TextView(this.getContext(), null, android.R.attr.textAppearanceMedium);
 		row.addView(itemName);
-		itemName.setText(item);
+		itemName.setText(item.getName());
 		itemName.setPadding(40, 10, 0, 0);
-		
+		final String itemId = item.getId();
+		itemName.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageItem");
+				intent.putExtra("ID", itemId);
+				getContext().startActivity(intent);	
+			}
+			
+		});
 	}
 	
 }

@@ -4,30 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
+
 public class CategoriesAndItems {
 	
 	private DBHelper db;
 	
-//	private Map<String, String> categories;
+	private Context context;
 	private List<Category> categories;
-	private Map<String, String> items;
+	private List<Item> items;
 	private Map<String, String> itemRelationships;
 	
-	public CategoriesAndItems (List<Category> categories, Map<String, String> items,
-								Map<String, String> itemRelationships, DBHelper db) {
-		this.categories = categories;
-		this.items = items;
-		this.itemRelationships = itemRelationships;
-		this.db = db;
-	}
-
-	@Deprecated
-	public List<String> getCategoryNames() {
-		List<String> categoryName = new ArrayList<String>();
-		for (Category entry : this.categories) {
-			categoryName.add(entry.getName());
-		}
-		return categoryName;
+	public CategoriesAndItems(Context context) {
+		this.context = context;
+		this.db = new DBHelper(context);
+		
+		
+		this.categories = db.getCategories();
+		this.items = db.getItems();
+		this.itemRelationships = db.getItemRelationships();
 	}
 	
 	@Deprecated
@@ -36,42 +31,39 @@ public class CategoriesAndItems {
 		for (Map.Entry<String, String> entry : this.itemRelationships.entrySet()) {
 			if(entry.getValue().equals(id)) {
 				matchingItems.add(entry.getKey());
-//				matchingItems.add(this.items.get(entry.getKey()));
 			}
 		}
 		return matchingItems;
 	}
+
 	
-	public String getItemText(String id) {
-		return this.items.get(id);
+	public Item getItemById(String id) {
+		for (Item item : this.items) {
+			if (item.getId().equals(id)) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public void updateItem(Item item) {
+		if (item.getId() == null) {
+			db.addItem(item);
+		} else {
+			db.updateItem(item);
+		}
 	}
 	
 	@Deprecated
-	public Map<String, String> getAllItems() {
-		return this.items;
-	}
-
-	
 	public Map<String, String> getItemRelationships() {
 		return this.itemRelationships;
 	}
 	
-	public void updateCategory(String id, String category) {
-		if (id == null) {
+	public void updateCategory(Category category) {
+		if (category.getId() == null) {
 			db.addCategory(category);
-		}
-	}
-	
-	@Deprecated
-	public void updateItem(String id, String item, String category) {
-		String categoryId = null;
-		for (Category category2 : categories) {
-			if (category2.getName().equals(category)) {
-				categoryId = category2.getId();
-			}
-		}
-		if (id == null) {
-			db.addItem(item, categoryId);
+		} else {
+			db.updateCategory(category);
 		}
 	}
 
@@ -79,4 +71,7 @@ public class CategoriesAndItems {
 		return categories;
 	}
 	
+	public Category getCategoryById(String id) {
+		return db.getCategoryById(id);
+	}
 }

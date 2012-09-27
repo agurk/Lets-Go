@@ -1,10 +1,5 @@
 package com.timothy.moll.lets.go;
 
-import com.timothy.moll.lets.go.data.Category;
-import com.timothy.moll.lets.go.data.ListData;
-import com.timothy.moll.lets.go.data.Lists;
-import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +7,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+
+import com.timothy.moll.lets.go.data.Category;
+import com.timothy.moll.lets.go.data.ListData;
+import com.timothy.moll.lets.go.data.Lists;
+import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
 
 public class RunList extends Activity {
 	

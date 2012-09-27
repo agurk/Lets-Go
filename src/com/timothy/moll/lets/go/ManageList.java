@@ -3,15 +3,6 @@ package com.timothy.moll.lets.go;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.timothy.moll.lets.go.R;
-import com.timothy.moll.lets.go.data.CategoriesAndItems;
-import com.timothy.moll.lets.go.data.Category;
-import com.timothy.moll.lets.go.data.DBHelper;
-import com.timothy.moll.lets.go.data.Item;
-import com.timothy.moll.lets.go.data.ListData;
-import com.timothy.moll.lets.go.data.Lists;
-import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,6 +11,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.timothy.moll.lets.go.data.CategoriesAndItems;
+import com.timothy.moll.lets.go.data.Category;
+import com.timothy.moll.lets.go.data.Item;
+import com.timothy.moll.lets.go.data.ListData;
+import com.timothy.moll.lets.go.data.Lists;
+import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
 
 public class ManageList extends Activity {
 	
@@ -79,8 +77,7 @@ public class ManageList extends Activity {
 			 }
 		 }
 		this.itemList = new SelectableCategoryItemList(this);
-        DBHelper db = new DBHelper(this);
-     	CategoriesAndItems CandI = db.getCategoriesAndItems();
+     	CategoriesAndItems CandI = new CategoriesAndItems(this);
      	for (Category category : CandI.getCategories()) {
      		if (selectedItems != null) {
      			for (Item item : category.getItems()) {
