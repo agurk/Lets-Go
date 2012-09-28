@@ -20,7 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.timothy.moll.lets.go.ManageCategoriesItems" android:label="@string/title_manage_categories_items"/>
+        <activity android:name=".ManageCategory" android:label="@string/title_manage_categories_items"/>
+        <activity android:name=".ManageItem" android:label="@string/title_manage_categories_items"/>
         <activity android:name="com.timothy.moll.lets.go.ManageList" android:label="@string/title_manage_list"/>
         <activity android:name="com.timothy.moll.lets.go.RunList" android:label="@string/title_run_list" android:screenOrientation="portrait"/>
     </application>

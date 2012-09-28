@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -51,17 +50,21 @@ public class CategoryListItem extends TableRow {
 			addItem(item);
 		}
 		final String categoryId = category.getId();
-		categoryName.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageCategory");
-				intent.putExtra("ID",categoryId);
-				getContext().startActivity(intent);					
-			}
-			
-		});
+		// Check for null, as this will be the collect all category for
+		// orphan items
+		if (categoryId != null) {
+			categoryName.setOnClickListener(new OnClickListener() {
+	
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent();
+					intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageCategory");
+					intent.putExtra("ID",categoryId);
+					getContext().startActivity(intent);					
+				}
+				
+			});
+		}
 	}
 	
 	private void setCategoryName(String category) {
@@ -69,7 +72,6 @@ public class CategoryListItem extends TableRow {
 	}
 	
 	private void addItem(Item item) {
-		Log.w("Adding item",item.getName()); 
 		TableRow row = new TableRow(this.getContext());
 		this.items.addView(row);
 		TextView itemName = new TextView(this.getContext(), null, android.R.attr.textAppearanceMedium);

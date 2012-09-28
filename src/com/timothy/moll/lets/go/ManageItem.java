@@ -3,7 +3,6 @@ package com.timothy.moll.lets.go;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -39,10 +38,10 @@ public class ManageItem extends Activity {
 	     if (id == null) {
 	    	 this.item = new Item(null, null, false, null);
 	     } else {
-	    	 CategoriesAndItems cAndI = new CategoriesAndItems(this);
-	    	 this.item = cAndI.getItemById(id);
-	    	 EditText te = (EditText) findViewById(R.id.category_item_name);
-	    	 te.setText(item.getName());
+            CategoriesAndItems cAndI = new CategoriesAndItems(this);
+	    	this.item = cAndI.getItemById(id);
+		    EditText te = (EditText) findViewById(R.id.category_item_name);
+		    te.setText(item.getName());
 	     }
 	     
 	     showCategories();
@@ -74,12 +73,14 @@ public class ManageItem extends Activity {
 		 
 		 CategoriesAndItems CandA = new CategoriesAndItems(this);
 		 for(Category category : CandA.getCategories()) {
-			 RadioButton rb = new RadioButton(this);
-			 rb.setText(category.getName());
-			 rb.setId(Integer.parseInt(category.getId()));
-			 this.categoryGroup.addView(rb);
-			 if(category.getId().equals(this.item.getCategoryId())) {
-				 this.categoryGroup.check(rb.getId());
+			 if (category.getId() != null) {
+				 RadioButton rb = new RadioButton(this);
+				 rb.setText(category.getName());
+				 rb.setId(Integer.parseInt(category.getId()));
+				 this.categoryGroup.addView(rb);
+				 if(category.getId().equals(this.item.getCategoryId())) {
+					 this.categoryGroup.check(rb.getId());
+				 }
 			 }
 		 }
 	 }
@@ -95,7 +96,6 @@ public class ManageItem extends Activity {
 //			this.item.setCategoryId(rb.getText().toString());
 			this.item.setCategoryId(Integer.toString(rb.getId()));
 			this.item.setName(te.getText().toString());
-			Log.w("updating item", item.getName());
 			CandA.updateItem(this.item);
 		}
     }

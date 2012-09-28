@@ -3,7 +3,7 @@ package com.timothy.moll.lets.go.data;
 import java.util.List;
 
 public class Category {
-
+	
 	private String name;
 	private String id;
 	private List<Item> items;

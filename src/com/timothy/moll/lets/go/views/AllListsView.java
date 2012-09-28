@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
-
 import com.timothy.moll.lets.go.data.ListData;
-import com.timothy.moll.lets.go.data.Lists;
 
 public class AllListsView extends ScrollView {
 	

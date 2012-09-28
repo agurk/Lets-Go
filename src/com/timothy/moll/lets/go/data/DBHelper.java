@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -72,6 +73,26 @@ public class DBHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 	
+	private List<Item> getItemsWithoutCategory() {
+		List<Item> items = new ArrayList<Item>();
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		String selectQuery = "SELECT "+ITEM_ID + ", "+ITEM_NAME
+							+ " FROM " + ITEM_TABLE 
+							+ " WHERE " + ITEM_CATEGORY + " NOT IN "  
+								+ " ( SELECT " + CATEGORY_ID + " FROM "
+								+ CATEGORIES_TABLE + " ) ";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+        	do {
+        		Item item = new Item(cursor.getString(0), cursor.getString(1), Boolean.TRUE, null);
+        		items.add(item);
+        	} while (cursor.moveToNext());
+        }
+		
+		return items;
+	}
+	
 	private List<Item> getItemsForCategory(String categoryId) {
 		List<Item> items = new ArrayList<Item>();
 		
@@ -104,6 +125,8 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 		
 		db.close();
+		Category emptyCategory = new Category(null, "Orphan Children", getItemsWithoutCategory());
+		categories.add(emptyCategory);
 		return categories;
 	}
 	

@@ -1,5 +1,4 @@
 <resources>
-
     <string name="app_name">Let\'s Go</string>
     <string name="title_section2">Categories/Items</string>
     <string name="title_section1">Lists</string>
@@ -9,4 +8,5 @@
     <string name="title_manage_categories_items">Manage Category/Item</string>
     <string name="title_manage_list">Manage List</string>
     <string name="title_run_list">Run List</string>    
+    <string name="orphan_child_category_name">0rph4n 1t3ms :\'(</string>
 </resources>

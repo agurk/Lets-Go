@@ -28,13 +28,10 @@ public class AllCategoriesAndItems extends Fragment {
        	return mainView;    	
     }
     
-    public void updateView(Context context) {
-    	Log.w("Refreshing","here");
-    		
+    public void updateView(Context context) {   		
     		CategoriesAndItems cAndI = new CategoriesAndItems(context);
     		if (mainView != null) {
-    			Log.w("Refreshing","there");
-    		mainView.update(cAndI.getCategories());
+    			mainView.update(cAndI.getCategories());
     		}
     }
 

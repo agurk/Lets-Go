@@ -3,8 +3,6 @@ package com.timothy.moll.lets.go.views;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ public class CategoriesAndItemsView extends ScrollView {
     		mainLayout.addView(tv);
     	}
 	}
-	
 
 	public void update(List<Category> categories) {
 		mainLayout.removeAllViews();
