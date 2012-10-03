@@ -47,6 +47,8 @@ public final class R {
         public static final int hello_world=0x7f040003;
         public static final int menu_settings=0x7f040004;
         public static final int orphan_child_category_name=0x7f040009;
+        public static final int run_list_title_section1=0x7f04000b;
+        public static final int run_list_title_section2=0x7f04000a;
         public static final int title_activity_main_screen=0x7f040005;
         public static final int title_manage_categories_items=0x7f040006;
         public static final int title_manage_list=0x7f040007;

@@ -30,7 +30,7 @@ public class AllListItems extends Fragment {
 	public void updateView(Context context) {
 			Lists lists = new Lists(context);
 			if (mainView != null) {
-			mainView.update(lists.getBasicLists());
+				mainView.update(lists.getBasicLists());
 			}
 	}
 	

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -173,7 +172,6 @@ public class DBHelper extends SQLiteOpenHelper {
 			do {
 				Item item = new Item(cursor.getString(0), cursor.getString(1), false, cursor.getString(2));
 				items.add(item);
-				Log.w("found item", item.getName());
 			} while (cursor.moveToNext());
 		}
 		
@@ -283,7 +281,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues();
 			values.put(LIST_ITEMS_NAME, id);
 			values.put(LIST_ITEMS_ITEM, item.getId());
-			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isChecked()));
+			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isPacked()));
 			db.insert(LIST_ITEMS_TABLE, null, values);
 		}
         db.close();

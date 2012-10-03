@@ -82,7 +82,7 @@ public class ManageList extends Activity {
      		if (selectedItems != null) {
      			for (Item item : category.getItems()) {
      				if (!selectedItems.contains(item.getId())) {
-     					item.setChecked(false);
+     					item.setPacked(false);
      				}
      			}
      		}

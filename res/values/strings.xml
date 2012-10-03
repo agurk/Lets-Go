@@ -9,4 +9,6 @@
     <string name="title_manage_list">Manage List</string>
     <string name="title_run_list">Run List</string>    
     <string name="orphan_child_category_name">0rph4n 1t3ms :\'(</string>
+    <string name="run_list_title_section2">Packed</string>
+    <string name="run_list_title_section1">Unpacked</string>
 </resources>

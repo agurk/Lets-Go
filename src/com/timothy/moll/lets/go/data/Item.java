@@ -4,13 +4,13 @@ public class Item {
 
 	private String id;
 	private String name;
-	private boolean checked;
+	private boolean packed;
 	private String categoryId;
 	
 	public Item(String id, String name, boolean checked, String categoryId) {
 		this.id = id;
 		this.name = name;
-		this.checked = checked;
+		this.packed = checked;
 		this.categoryId = categoryId;
 	}
 
@@ -29,12 +29,12 @@ public class Item {
 		this.categoryId = categoryId;
 	}
 	
-	public boolean isChecked() {
-		return checked;
+	public boolean isPacked() {
+		return packed;
 	}
 
-	public void setChecked(boolean checked) {
-		this.checked = checked;
+	public void setPacked(boolean checked) {
+		this.packed = checked;
 	}
 
 	public String getId() {
