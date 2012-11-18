@@ -29,18 +29,18 @@ public class CategoryListItem extends TableRow {
 		this.layout.setOrientation(LinearLayout.VERTICAL);
 		this.addView(this.layout);
 		this.setPadding(0, 0, 0, 30);
-		
-		this.categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
-		this.categoryName.setPadding(20, 0, 0, 5);
-
-		View ruler = new View(this.getContext());
-		ruler.setBackgroundColor(0xFF0000FF);
-
-		this.items = new TableLayout(this.getContext());
-		
-		this.layout.addView(this.categoryName);
-		this.layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
-		this.layout.addView(this.items);
+//		
+//		this.categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
+//		this.categoryName.setPadding(20, 0, 0, 5);
+//
+//		View ruler = new View(this.getContext());
+//		ruler.setBackgroundColor(0xFF0000FF);
+//
+//		this.items = new TableLayout(this.getContext());
+//		
+//		this.layout.addView(this.categoryName);
+//		this.layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
+//		this.layout.addView(this.items);
 	}
 	
 	public void addCategory(Category category) {
