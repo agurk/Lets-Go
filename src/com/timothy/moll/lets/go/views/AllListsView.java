@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import com.timothy.moll.lets.go.data.ListData;
+import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 public class AllListsView extends ScrollView {
 	
@@ -38,19 +39,11 @@ public class AllListsView extends ScrollView {
 					getContext().startActivity(intent);
 
 			}});
-    		
     		mainLayout.addView(listItem);
-    		
-    		View ruler = new View(this.getContext());
-    		ruler.setBackgroundColor(0x00000000);
-    		mainLayout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 5);
     	}
     	
     	if(mainLayout.getChildCount() == 0) {
-    		TextView tv = new TextView(getContext(), null, android.R.attr.textAppearanceLarge);
-    		tv.setPadding(20, 0, 0, 0);
-    		tv.setText("No Lists added yet...");
-    		mainLayout.addView(tv);
+    		mainLayout.addView(WidgetFactory.getEmptyListLabel(getContext(), "No lists added yet..."));
     	}
    	}
 	

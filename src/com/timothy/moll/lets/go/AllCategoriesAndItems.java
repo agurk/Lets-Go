@@ -19,20 +19,17 @@ public class AllCategoriesAndItems extends Fragment {
 	}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    			Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	CategoriesAndItems cAndI = new CategoriesAndItems(getActivity());
     	mainView = new CategoriesAndItemsView(getActivity());
     	mainView.addCategories(cAndI.getCategories());
-       	return mainView;    	
+       	return mainView;
     }
     
-    public void updateView(Context context) {   		
+    public void updateView(Context context) {
     		CategoriesAndItems cAndI = new CategoriesAndItems(context);
     		if (mainView != null) {
     			mainView.update(cAndI.getCategories());
     		}
     }
-
-	
 }

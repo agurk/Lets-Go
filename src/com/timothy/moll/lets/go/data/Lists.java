@@ -1,6 +1,5 @@
 package com.timothy.moll.lets.go.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -9,26 +8,14 @@ import android.content.Context;
 public class Lists {
 
 	private DBHelper db;
-	
-	private Context context;
-	
+		
 	private List<ListData> lists;
 
 	
 	public Lists(Context context) {
-		this.context = context;
 		DBHelper db = new DBHelper(context);
 		this.db = db;
 		this.lists = db.getLists();
-	}
-	
-	@Deprecated
-	public List<String> getListNames() {
-		List<String> lists = new ArrayList<String>();
-		for(ListData list : this.lists) {
-			lists.add(list.getName());
-		}
-		return lists;
 	}
 	
 	public List<ListData> getBasicLists() {
@@ -49,6 +36,7 @@ public class Lists {
 		return listId;
 	}
 	
+	@Deprecated
 	public void updateList(ListData list, String listName, List<String> items) {
 		String listId;
 		if (list == null) {
@@ -60,16 +48,16 @@ public class Lists {
 		db.updateListItems(listId, items, null);
 	}
 	
-	public void updateCheckedItems(String listId, List<Item> items) {
-		db.updateListItems(listId, items);
-	}
-
 	public List<Item> getItemsForCategoryid(String listId, String categoryId) {
 		return db.getItemsForCategory(listId, categoryId);
 	}
 	
 	public void deleteList(ListData listIn) {
 		db.deleteList(listIn.getId());
+	}
+	
+	public void updatePackedItems(ListData listIn) {
+		db.updatePackedItems(listIn.getId(), listIn.getChangedItems());
 	}
 	
 }

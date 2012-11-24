@@ -1,46 +1,33 @@
 package com.timothy.moll.lets.go.views;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.timothy.moll.lets.go.RunListFragments.RunListFragment;
 import com.timothy.moll.lets.go.data.Category;
+import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 public class RunListCategory extends TableRow {
 
 	private LinearLayout categoryLayout;
-	
-	private Category category;
-	
-	private TableLayout display;
+		
+	private RunListFragment display;
 	
 	private int itemNumber;
 	private boolean displayed;
 
 	public RunListCategory(Context context, Category category, RunListFragment display) {
 		super(context);
-		setPadding(0, 0, 0, 30);
-		this.category = category;
 		this.display = display;
-		categoryLayout = new LinearLayout(this.getContext());
-		categoryLayout.setOrientation(LinearLayout.VERTICAL);
+		this.categoryLayout = WidgetFactory.getRunListCategoryLayout(context);
 		this.addView(categoryLayout);
-		createCategory();
-	}
-		
-	private void createCategory() {
-		TextView categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
-		categoryName.setPadding(20, 0, 0, 5);
-		categoryName.setText(category.getName());
-		this.categoryLayout.addView(categoryName);
-		View ruler = new View(this.getContext());
-		ruler.setBackgroundColor(0xFF0000FF);
-		this.categoryLayout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
+		this.categoryLayout.addView(WidgetFactory.getRunListCategoryTextView(getContext(), category.getName()));
+		this.categoryLayout.addView(WidgetFactory.getRuler(getContext()));
 	}
 
 	public void addItem(RunListItem newItem) {
@@ -61,9 +48,10 @@ public class RunListCategory extends TableRow {
 	private void setIfDisplayed () {
 		if (this.itemNumber>0 && !displayed) {
 			display.addCategory(this);
+			displayed = true;
 		} else if (this.itemNumber<1 && displayed) {
 			display.removeCategory(this);
-		}
+			displayed = false;
+		}	
 	}
-		
 }

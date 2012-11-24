@@ -11,40 +11,24 @@ import android.widget.TextView;
 
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
+import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 public class CategoryListItem extends TableRow {
 
-	private TextView categoryName;
 	private LinearLayout layout;
-	private TableLayout items;
-		
-	public CategoryListItem(Context context) {
-		super(context);
-		createMainLayout();
-	}
-
-	private void createMainLayout() {
-		this.layout = new LinearLayout(this.getContext());
-		this.layout.setLayoutParams(new LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		this.layout.setOrientation(LinearLayout.VERTICAL);
-		this.addView(this.layout);
-		this.setPadding(0, 0, 0, 30);
-//		
-//		this.categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
-//		this.categoryName.setPadding(20, 0, 0, 5);
-//
-//		View ruler = new View(this.getContext());
-//		ruler.setBackgroundColor(0xFF0000FF);
-//
-//		this.items = new TableLayout(this.getContext());
-//		
-//		this.layout.addView(this.categoryName);
-//		this.layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
-//		this.layout.addView(this.items);
-	}
+	private TextView categoryName;
 	
-	public void addCategory(Category category) {
-		setCategoryName(category.getName());
+	private TableLayout items;
+
+	public CategoryListItem(Context context, Category category) {
+		super(context);	
+		this.layout = WidgetFactory.getCategoryListItemLayout(context);
+		this.addView(this.layout);
+		this.categoryName = WidgetFactory.getRunListCategoryTextView(getContext(), category.getName());
+		this.layout.addView(this.categoryName);
+		this.layout.addView(WidgetFactory.getRuler(getContext()));
+		this.items = new TableLayout(getContext());
+		this.layout.addView(this.items);
 		for (Item item : category.getItems()) {
 			addItem(item);
 		}
@@ -53,7 +37,6 @@ public class CategoryListItem extends TableRow {
 		// orphan items
 		if (categoryId != null) {
 			categoryName.setOnClickListener(new OnClickListener() {
-	
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent();
@@ -61,22 +44,15 @@ public class CategoryListItem extends TableRow {
 					intent.putExtra("ID",categoryId);
 					getContext().startActivity(intent);					
 				}
-				
 			});
 		}
-	}
-	
-	private void setCategoryName(String category) {
-		this.categoryName.setText(category);
 	}
 	
 	private void addItem(Item item) {
 		TableRow row = new TableRow(this.getContext());
 		this.items.addView(row);
-		TextView itemName = new TextView(this.getContext(), null, android.R.attr.textAppearanceMedium);
+		TextView itemName = WidgetFactory.getRunListItemTextView(getContext(), item.getName()); 
 		row.addView(itemName);
-		itemName.setText(item.getName());
-		itemName.setPadding(40, 10, 0, 0);
 		final String itemId = item.getId();
 		itemName.setOnClickListener(new OnClickListener() {
 
@@ -86,9 +62,7 @@ public class CategoryListItem extends TableRow {
 				intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageItem");
 				intent.putExtra("ID", itemId);
 				getContext().startActivity(intent);	
-			}
-			
+			}		
 		});
 	}
-	
 }

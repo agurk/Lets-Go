@@ -1,6 +1,7 @@
 package com.timothy.moll.lets.go.views;
 
 import com.timothy.moll.lets.go.data.Item;
+import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 import android.content.Context;
 import android.view.View;
@@ -16,7 +17,7 @@ public class RunListItem extends TableRow {
 	private RunListCategory packedCategory;
 	private RunListCategory unpackedCategory;
 	
-	Boolean packed;
+	private Boolean packed;
 
 	public RunListItem(Context context, Item item, RunListCategory packed, RunListCategory unpacked) {
 		super(context);
@@ -28,9 +29,8 @@ public class RunListItem extends TableRow {
 	}
 	
 	private void createItem() {
-		this.itemName = new TextView(this.getContext());
+		this.itemName = WidgetFactory.getRunListItemTextView(getContext(), item.getName());
 		this.addView(this.itemName);
-		this.itemName.setText(item.getName());
 		final RunListItem thisRef = this;
 		itemName.setOnClickListener(new OnClickListener() {	
 			@Override
@@ -38,21 +38,25 @@ public class RunListItem extends TableRow {
 				thisRef.togglePacked();
 		}});
 		if(packed) {
-			packedCategory.addView(this);
+			packedCategory.addItem(this);
 		} else {
-			unpackedCategory.addView(this);
+			unpackedCategory.addItem(this);
 		}
 	}
 	
 	private void togglePacked() {
 		if(packed) {
-			packedCategory.removeView(this);
-			unpackedCategory.addView(this);
+			packedCategory.removeItem(this);
+			unpackedCategory.addItem(this);
 		} else {
-			unpackedCategory.removeView(this);
-			packedCategory.addView(this);
+			unpackedCategory.removeItem(this);
+			packedCategory.addItem(this);
 		}
 		packed = !packed;
-		item.setPacked(!packed);
+		item.setPacked(!item.isPacked());
+	}
+	
+	public Item getItem() {
+		return this.item;
 	}
 }

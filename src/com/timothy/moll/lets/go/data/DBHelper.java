@@ -229,6 +229,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(ITEM_CATEGORY, item.getCategoryId());
         db.insert(ITEM_TABLE, null, values);
         db.close();
+        item.setSaved();
 	}
 
 	protected String addList(String listName, List<String> categories) {
@@ -282,6 +283,28 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put(LIST_ITEMS_ITEM, item.getId());
 			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isPacked()));
 			db.insert(LIST_ITEMS_TABLE, null, values);
+			item.setSaved();
+		}
+        db.close();
+	}
+	
+	protected void updatePackedItems(String listId, List<Item> items) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		for (Item item: items) {
+			// Cleardown the old values
+			db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
+					+ " WHERE " + LIST_ITEMS_NAME
+					+ " = " + listId + " AND "
+					+ LIST_ITEMS_ITEM + " = " + item.getId());
+			// Save the new values
+			ContentValues values = new ContentValues();
+			values.put(LIST_ITEMS_NAME, listId);
+			values.put(LIST_ITEMS_ITEM, item.getId());
+			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isPacked()));
+			db.insert(LIST_ITEMS_TABLE, null, values);
+			// Mark item as updated
+			item.setSaved();
 		}
         db.close();
 	}
@@ -348,6 +371,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		args.put(ITEM_CATEGORY, item.getCategoryId());
 		db.update(ITEM_TABLE, args, ITEM_ID + " = " + item.getId(), null);
 		db.close(); 
+		item.setSaved();
 	}
 	
 	// TODO: only updates name. Do I want to update items too?

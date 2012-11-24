@@ -1,5 +1,7 @@
 package com.timothy.moll.lets.go;
 
+import java.util.Locale;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -11,28 +13,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.timothy.moll.lets.go.data.ListData;
 import com.timothy.moll.lets.go.data.Lists;
-import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
 
 public class RunList extends FragmentActivity implements ActionBar.TabListener  {
 	
-//	private ListData list;
-	private String listId;
-	
-	private SelectableCategoryItemList itemsList;
-	
-	SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
+	private ListData list;
+		
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
+    private RunListFragments rLFs;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
-
+        
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//        FragmentManager bar = getSupportFragmentManager();
-//        FragmentManager bar;// = new FragmentManager();
-//        mSectionsPagerAdapter = new SectionsPagerAdapter(bar);
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -56,7 +55,10 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
                             .setTabListener(this));
         }
         
-        listId = getIntent().getExtras().getString("ID");
+        Lists lists = new Lists(getBaseContext());
+        this.list = lists.getList(getIntent().getExtras().getString("ID"));
+		this.rLFs = new RunListFragments(list, getBaseContext());
+
     }
 	 
 	 @Override
@@ -72,7 +74,7 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 			 save();
 			 Intent intent = new Intent();
 			 intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageList");
-			 intent.putExtra("ID", listId);
+			 intent.putExtra("ID", this.list.getId());
 			 startActivity(intent);
 			 break;
 		 case R.id.run_list_delete:
@@ -89,37 +91,16 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
       }
 		 return true;
 	 }
-
-//	 @Override
-//	 public void onResume() {
-//		 LinearLayout layout = (LinearLayout) findViewById(R.id.run_list_layout);
-//		 if (this.itemsList != null) {
-//			 layout.removeAllViews();
-//		 }
-//		 createDisplay();
-//		 super.onResume();
-//	 }
-//	 
-//	 private void createDisplay() {
-//		 LinearLayout layout = (LinearLayout) findViewById(R.id.run_list_layout);
-//		 this.itemsList = new SelectableCategoryItemList(this);
-//		 layout.addView(this.itemsList);
-//		 
-//		 for (Category category : list.getCategories()) {
-//			 this.itemsList.addCategory(category);
-//		 }
-//		 
-//	 }
 	 
 	 private void delete() {
 		 //TODO add confirm on delete!
 		 Lists lists = new Lists(this);
-		 lists.deleteList(lists.getList(listId));
+		 lists.deleteList(this.list);
 	 }
 	 
 	 private void save() {
 		 Lists lists = new Lists(this);
-		 lists.updateCheckedItems(listId, this.itemsList.getAllItems());
+		 lists.updatePackedItems(this.list);
 	 }
 	 
 	 
@@ -138,14 +119,13 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 	    }
 	    
 	    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
+	    	
 	        public SectionsPagerAdapter(FragmentManager fm) {
 	            super(fm);
 	        }
 
 	        @Override
 	        public Fragment getItem(int i) {
-	        	RunListFragments rLFs = new RunListFragments(listId, getBaseContext());
 	        	switch(i) {
 	        		case 0:
 	        			return rLFs.getUnpacked();
@@ -163,8 +143,8 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 	        @Override
 	        public CharSequence getPageTitle(int position) {
 	            switch (position) {
-	                case 0: return getString(R.string.run_list_title_section1).toUpperCase();
-	                case 1: return getString(R.string.run_list_title_section2).toUpperCase();
+	                case 0: return getString(R.string.run_list_title_section1).toUpperCase(Locale.getDefault());
+	                case 1: return getString(R.string.run_list_title_section2).toUpperCase(Locale.getDefault());
 	            }
 	            return null;
 	        }

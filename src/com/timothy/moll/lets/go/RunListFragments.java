@@ -1,21 +1,21 @@
 package com.timothy.moll.lets.go;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.timothy.moll.lets.go.data.Category;
 import com.timothy.moll.lets.go.data.Item;
 import com.timothy.moll.lets.go.data.ListData;
-import com.timothy.moll.lets.go.data.Lists;
 import com.timothy.moll.lets.go.views.RunListCategory;
-import com.timothy.moll.lets.go.views.RunListDisplay;
-import com.timothy.moll.lets.go.views.SelectableCategoryItemList;
-
+import com.timothy.moll.lets.go.views.RunListItem;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 
 public class RunListFragments {
@@ -27,21 +27,22 @@ public class RunListFragments {
 	
 	private ListData list;
 	
-	private RunListFragments selfRef;
+	private List<RunListItem> runListItems;
 	
-	public RunListFragments(String listId, Context context) {
+	
+	public RunListFragments(ListData list, Context context) {
 		this.context = context;
-		Lists lists = new Lists(context);
-		this.list = lists.getList(listId);
-		this.selfRef = this;
-		
-		packed = new RunListFragment();		
+		this.list = list;
+		packed = new RunListFragment();
 		unpacked = new RunListFragment();
+		
+		runListItems = new ArrayList<RunListItem>();
 		for (Category category : list.getCategories()) {
 			RunListCategory packedCategory = new RunListCategory(context, category, packed);
 			RunListCategory unpackedCategory = new RunListCategory(context, category, unpacked);
 			for(Item item : category.getItems()) {
 				RunListItem rlItem = new RunListItem(context, item, packedCategory, unpackedCategory);
+				this.runListItems.add(rlItem);
 			}
 		}
 	}
@@ -54,29 +55,32 @@ public class RunListFragments {
 		return unpacked;
 	}
 	
-
-	
 	public class RunListFragment extends Fragment {
-
+		private ScrollView scrollView;
 		private LinearLayout mainView;
 		private TableLayout categoriesAndItems;
-		private boolean packedView;
 
-		public RunListFragment() {
+	    public RunListFragment() {
 			super();
+			scrollView = new ScrollView(context);
+	    	mainView = new LinearLayout(context);
+	    	scrollView.addView(mainView);
+			categoriesAndItems = new TableLayout(context);
+			mainView.addView(categoriesAndItems);
 		}
 
-	    @Override
+		@Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    			Bundle savedInstanceState) {
-			 mainView = new LinearLayout(context);
-			 categoriesAndItems = new TableLayout(context);
-			 mainView.addView(categoriesAndItems);
-	    	return mainView;    	
+	    	return scrollView;
 	    }
 	    
 	    public void addCategory(RunListCategory category) {
-	    	this.categoriesAndItems.addView(category);
+	    	if (this.categoriesAndItems == null) {
+	    		
+	    	} else {
+	    		this.categoriesAndItems.addView(category);	
+	    	}
 	    }
 	    
 	    public void removeCategory(RunListCategory category) {

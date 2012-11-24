@@ -10,15 +10,12 @@ public class CategoriesAndItems {
 	
 	private DBHelper db;
 	
-	private Context context;
 	private List<Category> categories;
 	private List<Item> items;
 	private Map<String, String> itemRelationships;
 	
 	public CategoriesAndItems(Context context) {
-		this.context = context;
-		this.db = new DBHelper(context);
-		
+		this.db = new DBHelper(context);		
 		
 		this.categories = db.getCategories();
 		this.items = db.getItems();
@@ -73,5 +70,9 @@ public class CategoriesAndItems {
 	
 	public Category getCategoryById(String id) {
 		return db.getCategoryById(id);
+	}
+	
+	public void updatePackedItems(String listId, List<Item> changedItems) {
+		db.updateListItems(listId, changedItems);
 	}
 }

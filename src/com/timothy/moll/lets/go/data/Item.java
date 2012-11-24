@@ -12,11 +12,16 @@ public class Item {
 	private TextView packedView;
 	private TextView unpackedView;
 	
+	private boolean changed;
+	
 	public Item(String id, String name, boolean checked, String categoryId) {
 		this.id = id;
 		this.name = name;
 		this.packed = checked;
 		this.categoryId = categoryId;
+		if (id == null) {
+			this.changed = true;
+		}
 	}
 
 	public boolean matchesId(String id) {
@@ -32,6 +37,7 @@ public class Item {
 
 	public void setCategoryId(String categoryId) {
 		this.categoryId = categoryId;
+		this.changed = true;
 	}
 	
 	public boolean isPacked() {
@@ -40,6 +46,7 @@ public class Item {
 
 	public void setPacked(boolean checked) {
 		this.packed = checked;
+		this.changed = true;
 	}
 
 	public String getId() {
@@ -52,6 +59,7 @@ public class Item {
 	
 	public void setName(String name) {
 		this.name = name;
+		this.changed = true;
 	}
 
 	public TextView getPackedView() {
@@ -60,6 +68,7 @@ public class Item {
 
 	public void setPackedView(TextView packedView) {
 		this.packedView = packedView;
+		this.changed = true;
 	}
 
 	public TextView getUnpackedView() {
@@ -68,6 +77,15 @@ public class Item {
 
 	public void setUnpackedView(TextView unpackedView) {
 		this.unpackedView = unpackedView;
+		this.changed = true;
+	}
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setSaved() {
+		this.changed = false;
 	}
 	
 }
