@@ -5,10 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TextView;
 import com.timothy.moll.lets.go.data.ListData;
 import com.timothy.moll.lets.go.views.style.WidgetFactory;
 

@@ -1,8 +1,6 @@
 package com.timothy.moll.lets.go.views.style;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;

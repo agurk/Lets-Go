@@ -3,7 +3,6 @@ package com.timothy.moll.lets.go.views;
 import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.widget.TableRow;
 import android.widget.TextView;
 

@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import com.timothy.moll.lets.go.R;
 import com.timothy.moll.lets.go.data.CategoriesAndItems;
-import com.timothy.moll.lets.go.data.DBHelper;
+import com.timothy.moll.lets.go.data.Category;
+import com.timothy.moll.lets.go.data.Item;
 
 public class ManageCategoriesItems extends Activity {
 	
@@ -70,14 +71,13 @@ public class ManageCategoriesItems extends Activity {
 		  this.categoryGroup = new RadioGroup(this);
 		 layout.addView(this.categoryGroup);
 		 
-		 
-		 DBHelper db = new DBHelper(this);
-		 CategoriesAndItems CandA = db.getCategoriesAndItems();
-		 for(String category : CandA.getCategoryNames()) {
+
+		 CategoriesAndItems CandA = new CategoriesAndItems(this);
+		 for(Category category : CandA.getCategories()) {
 			 RadioButton rb = new RadioButton(this);
-			 rb.setText(category);
+			 rb.setText(category.getName());
 			 this.categoryGroup.addView(rb);
-			 if(category.equals(selectedCategoryId)) {
+			 if(category.getName().equals(selectedCategoryId)) {
 				 this.categoryGroup.check(rb.getId());
 			 }
 		 }
@@ -85,19 +85,24 @@ public class ManageCategoriesItems extends Activity {
 	 
 	 private void save() {
 //		 Log.w("item","SAVING...");
-		 DBHelper db = new DBHelper(this);
-		 CategoriesAndItems CandA = db.getCategoriesAndItems();
+//		 DBHelper db = new DBHelper(this);
+//		 CategoriesAndItems CandA = db.getCategoriesAndItems();
+		 CategoriesAndItems CandA = new CategoriesAndItems(this);
 		 EditText te = (EditText) findViewById(R.id.category_item_name);
 		 if (this.type == TYPE.CATEGORY) {
-			 CandA.updateCategory(id, te.getText().toString());
+			 Category category = CandA.getCategoryById(id);
+			 category.setName(te.getText().toString());
+			 CandA.updateCategory(category);
 		 } else {
 			 int selectedCategory = this.categoryGroup.getCheckedRadioButtonId();
 			 // -1 means no child is selected
 			 if (selectedCategory > -1) {
 //				 Log.w("ITEM","updating DB..."+selectedCategory);
 				 RadioButton rb = (RadioButton) findViewById(selectedCategory);
-				 CandA.updateItem(id, te.getText().toString(),
-						 rb.getText().toString());
+				 Item item = CandA.getItemById(id);
+				 item.setCategoryId(String.valueOf(te.getId()));
+				 item.setName(rb.getText().toString());
+				 CandA.updateItem(item);
 			 }
 		 }
 	 }
