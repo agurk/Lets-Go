@@ -72,7 +72,7 @@ public class CategoriesAndItems {
 		return db.getCategoryById(id);
 	}
 	
-	public void updatePackedItems(String listId, List<Item> changedItems) {
-		db.updateListItems(listId, changedItems);
-	}
+//	public void updatePackedItems(String listId, List<Item> changedItems) {
+//		db.updateListItems(listId, changedItems);
+//	}
 }

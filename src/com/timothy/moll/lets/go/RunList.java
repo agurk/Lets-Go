@@ -71,14 +71,17 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 	 public boolean onOptionsItemSelected(MenuItem item){
 		 switch(item.getItemId()) {
 		 case R.id.run_list_reset:
-			 reset_list();
+			 resetList();
 			 break;
 		 case R.id.run_list_edit:
 			 save();
 			 Intent intent = new Intent();
 			 intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.ManageList");
 			 intent.putExtra("ID", this.list.getId());
-			 startActivity(intent);
+			 // TODO: wait for this to finish
+			 startActivityForResult(intent, 1);
+			 
+//			 reloadList();
 			 break;
 		 case R.id.run_list_delete:
 			 delete();
@@ -95,13 +98,25 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 		 return true;
 	 }
 	 
-	 private void reset_list() {
+	 @Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	     super.onActivityResult(requestCode, resultCode, intent);
+
+//	     if (requestCode == 1) {
+	         reloadList();
+//	     }
+	 }
+	 
+	 private void resetList() {
 		 Lists lists = new Lists(this);
 		 lists.resetList(this.list);
 		 rLFs.resetFragments();
 		 mViewPager.setCurrentItem(0);
-//		 mSectionsPagerAdapter.
-//		 this.
+	 }
+	 
+	 private void reloadList() {
+		 rLFs.reloadFragments();
+		 
 	 }
 	 
 	 private void delete() {

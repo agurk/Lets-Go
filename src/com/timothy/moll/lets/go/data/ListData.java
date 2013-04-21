@@ -2,6 +2,7 @@ package com.timothy.moll.lets.go.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ListData {
 
@@ -38,6 +39,14 @@ public class ListData {
 	
 	public List<Item> getAllItems() {
 		return allItems;
+	}
+	
+	public List<String> getAllItemIDs() {
+		List<String> IDs = new Vector<String>();
+		for (Item item : allItems) {
+			IDs.add(item.getId());
+		}
+		return IDs;
 	}
 	
 	public List<Item> getChangedItems() {

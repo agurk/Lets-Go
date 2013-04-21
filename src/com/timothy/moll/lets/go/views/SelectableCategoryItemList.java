@@ -2,6 +2,7 @@ package com.timothy.moll.lets.go.views;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import android.content.Context;
 import android.view.View;
@@ -36,7 +37,7 @@ public class SelectableCategoryItemList extends TableLayout {
 
 	// Returns id's of items that are selected
 	public List<String> getSelectedItems() {
-		ArrayList<String> selectedItems = new ArrayList<String>();
+		List<String> selectedItems = new Vector<String>();
 		for (String entry: this.itemCheckBoxes) {
 			CheckBox cb = (CheckBox) findViewById(Integer.parseInt(entry));
 			if (cb != null && cb.isChecked()) {

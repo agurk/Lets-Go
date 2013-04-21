@@ -1,6 +1,7 @@
 package com.timothy.moll.lets.go.views;
 
 import com.timothy.moll.lets.go.data.Item;
+import com.timothy.moll.lets.go.data.Lists;
 import com.timothy.moll.lets.go.views.style.WidgetFactory;
 
 import android.content.Context;
@@ -12,6 +13,8 @@ public class RunListItem extends TableRow {
 	
 	private Item item;
 	
+	private String listId;
+	
 	private TextView itemName;
 	
 	private RunListCategory packedCategory;
@@ -19,9 +22,10 @@ public class RunListItem extends TableRow {
 	
 	private Boolean packed;
 
-	public RunListItem(Context context, Item item, RunListCategory packed, RunListCategory unpacked) {
+	public RunListItem(Context context, Item item, RunListCategory packed, RunListCategory unpacked, String listId) {
 		super(context);
 		this.item = item;
+		this.listId = listId;
 		this.packedCategory = packed;
 		this.unpackedCategory = unpacked;
 		this.packed = item.isPacked();
@@ -50,6 +54,7 @@ public class RunListItem extends TableRow {
 			unpackedCategory.addItem(this);
 			item.setPacked(!packed);
 			packed = !packed;
+			savePackedState();
 		}
 	}
 	
@@ -63,6 +68,12 @@ public class RunListItem extends TableRow {
 		}
 		packed = !packed;
 		item.setPacked(!item.isPacked());
+		savePackedState();
+	}
+	
+	private void savePackedState() {
+		Lists lists = new Lists(this.getContext());
+		lists.saveItemPackedState(this.item, this.packed, this.listId);
 	}
 	
 	public Item getItem() {

@@ -124,7 +124,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		db.close();
 		Category emptyCategory = new Category(null, "Orphan Children", getItemsWithoutCategory());
-		categories.add(emptyCategory);
+		if (emptyCategory.getItems().size() > 0 ) {
+			categories.add(emptyCategory);
+		}
 		return categories;
 	}
 	
@@ -243,7 +245,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	@Deprecated
-	protected void updateListItems(String id, List<String> items, String UN_USED) {
+	protected void updateListItems(String id, List<String> items) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
 					+ " WHERE " + LIST_ITEMS_NAME
@@ -271,21 +273,30 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 	}
 
-	protected void updateListItems(String id, List<Item> items) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
-					+ " WHERE " + LIST_ITEMS_NAME
-					+ " = " + id);
-		
-		for (Item item: items) {
-			ContentValues values = new ContentValues();
-			values.put(LIST_ITEMS_NAME, id);
-			values.put(LIST_ITEMS_ITEM, item.getId());
-			values.put(LIST_ITEMS_CHECKED, Boolean.toString(item.isPacked()));
-			db.insert(LIST_ITEMS_TABLE, null, values);
-			item.setSaved();
+	protected void addItemsToList(String id, List<String> itemIDs) {
+		if (itemIDs.size() > 0) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			for (String item : itemIDs) {
+				ContentValues values = new ContentValues();
+				values.put(LIST_ITEMS_NAME, id);
+				values.put(LIST_ITEMS_ITEM, item);
+				values.put(LIST_ITEMS_CHECKED, Boolean.toString(false));
+				db.insert(LIST_ITEMS_TABLE, null, values);
+			}
+	        db.close();
 		}
-        db.close();
+	}
+	
+	protected void removeItemsFromList(String id, List<String> itemIDs) {
+		if (itemIDs.size() > 0 ) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			for ( String item : itemIDs ) {
+			db.execSQL("DELETE FROM " + LIST_ITEMS_TABLE
+						+ " WHERE " + LIST_ITEMS_NAME + " = " + id
+						+ " AND " + LIST_ITEMS_ITEM + " = " + item);
+			}
+	        db.close();
+		}
 	}
 	
 	protected void updatePackedItems(String listId, List<Item> items) {
@@ -386,8 +397,17 @@ public class DBHelper extends SQLiteOpenHelper {
 	protected void resetList(String listId) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("UPDATE " + LIST_ITEMS_TABLE
-				+ " SET " + LIST_ITEMS_CHECKED + " = '" + Boolean.toString(false) + "'" 
-				+ " WHERE " + LIST_ITEMS_NAME + " = " + listId);
+				+ "    SET " + LIST_ITEMS_CHECKED + " = '" + Boolean.toString(false) + "'" 
+				+ "  WHERE " + LIST_ITEMS_NAME    + " = " + listId);
+		db.close();
+	}
+	
+	protected void saveItemPackedState(String itemId, Boolean state, String listId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("UPDATE " + LIST_ITEMS_TABLE
+				+ "    SET " + LIST_ITEMS_CHECKED + " = '" + Boolean.toString(state) + "'" 
+				+ "  WHERE " + LIST_ITEMS_NAME + " = " + listId
+				+ "    AND " + LIST_ITEMS_ITEM + " = " + itemId);
 		db.close();
 	}
 }

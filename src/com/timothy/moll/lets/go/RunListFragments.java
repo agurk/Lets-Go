@@ -35,16 +35,19 @@ public class RunListFragments {
 		this.list = list;
 		packed = new RunListFragment();
 		unpacked = new RunListFragment();
-
+		loadCategories();
+	}
+	
+	private void loadCategories() {
 		runListItems = new ArrayList<RunListItem>();
 		for (Category category : this.list.getCategories()) {
 			RunListCategory packedCategory = new RunListCategory(context, category, packed);
 			RunListCategory unpackedCategory = new RunListCategory(context, category, unpacked);
 			for(Item item : category.getItems()) {
-				RunListItem rlItem = new RunListItem(context, item, packedCategory, unpackedCategory);
+				RunListItem rlItem = new RunListItem(context, item, packedCategory, unpackedCategory, this.list.getId());
 				this.runListItems.add(rlItem);
 			}
-		}		
+		}
 	}
 	
 	public Fragment getPacked() {
@@ -53,6 +56,12 @@ public class RunListFragments {
 
 	public Fragment getUnpacked() {
 		return unpacked;
+	}
+	
+	public void reloadFragments() {
+		packed.removeAllCategories();
+		unpacked.removeAllCategories();
+		loadCategories();
 	}
 	
 	public void resetFragments() {
@@ -91,6 +100,10 @@ public class RunListFragments {
 	    
 	    public void removeCategory(RunListCategory category) {
 	    	this.categoriesAndItems.removeView(category);
+	    }
+	    
+	    public void removeAllCategories() {
+	    	this.categoriesAndItems.removeAllViewsInLayout();
 	    }
 	}
 	
