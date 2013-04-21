@@ -44,6 +44,15 @@ public class RunListItem extends TableRow {
 		}
 	}
 	
+	public void resetItem() {
+		if (packed) {
+			packedCategory.removeItem(this);
+			unpackedCategory.addItem(this);
+			item.setPacked(!packed);
+			packed = !packed;
+		}
+	}
+	
 	private void togglePacked() {
 		if(packed) {
 			packedCategory.removeItem(this);

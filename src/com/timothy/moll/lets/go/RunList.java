@@ -70,6 +70,9 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item){
 		 switch(item.getItemId()) {
+		 case R.id.run_list_reset:
+			 reset_list();
+			 break;
 		 case R.id.run_list_edit:
 			 save();
 			 Intent intent = new Intent();
@@ -90,6 +93,15 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 			 break;
       }
 		 return true;
+	 }
+	 
+	 private void reset_list() {
+		 Lists lists = new Lists(this);
+		 lists.resetList(this.list);
+		 rLFs.resetFragments();
+		 mViewPager.setCurrentItem(0);
+//		 mSectionsPagerAdapter.
+//		 this.
 	 }
 	 
 	 private void delete() {

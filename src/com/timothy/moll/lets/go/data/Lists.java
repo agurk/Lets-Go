@@ -60,4 +60,8 @@ public class Lists {
 		db.updatePackedItems(listIn.getId(), listIn.getChangedItems());
 	}
 	
+	public void resetList(ListData listIn) {
+		db.resetList(listIn.getId());
+	}
+	
 }

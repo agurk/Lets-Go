@@ -382,4 +382,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.update(CATEGORIES_TABLE, args, CATEGORY_ID + " = " + category.getId(), null);
 		db.close();
 	}
+	
+	protected void resetList(String listId) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("UPDATE " + LIST_ITEMS_TABLE
+				+ " SET " + LIST_ITEMS_CHECKED + " = '" + Boolean.toString(false) + "'" 
+				+ " WHERE " + LIST_ITEMS_NAME + " = " + listId);
+		db.close();
+	}
 }

@@ -35,16 +35,16 @@ public class RunListFragments {
 		this.list = list;
 		packed = new RunListFragment();
 		unpacked = new RunListFragment();
-		
+
 		runListItems = new ArrayList<RunListItem>();
-		for (Category category : list.getCategories()) {
+		for (Category category : this.list.getCategories()) {
 			RunListCategory packedCategory = new RunListCategory(context, category, packed);
 			RunListCategory unpackedCategory = new RunListCategory(context, category, unpacked);
 			for(Item item : category.getItems()) {
 				RunListItem rlItem = new RunListItem(context, item, packedCategory, unpackedCategory);
 				this.runListItems.add(rlItem);
 			}
-		}
+		}		
 	}
 	
 	public Fragment getPacked() {
@@ -53,6 +53,12 @@ public class RunListFragments {
 
 	public Fragment getUnpacked() {
 		return unpacked;
+	}
+	
+	public void resetFragments() {
+		for (RunListItem rlItem : runListItems) {
+			rlItem.resetItem();
+		}
 	}
 	
 	public class RunListFragment extends Fragment {

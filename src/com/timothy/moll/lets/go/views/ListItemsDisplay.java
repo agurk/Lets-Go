@@ -24,12 +24,12 @@ public class ListItemsDisplay extends TableLayout {
 		super(context);
 	}
 
-	public void addCategory(Category category, boolean packed, RunListFragments rlf) {
-		CategoryItemLayoutFoo cil = new CategoryItemLayoutFoo(getContext());
-		cil.addCategory(category, packed, rlf);
-//		this.itemCheckBoxes.addAll(cil.getCheckBoxIds());
-		this.addView(cil);
-	}
+//	public void addCategory(Category category, boolean packed, RunListFragments rlf) {
+//		CategoryItemLayoutFoo cil = new CategoryItemLayoutFoo(getContext());
+//		cil.addCategory(category, packed, rlf);
+////		this.itemCheckBoxes.addAll(cil.getCheckBoxIds());
+//		this.addView(cil);
+//	}
 
 	// Returns id's of items that are selected
 	public List<String> getSelectedItems() {
@@ -77,62 +77,62 @@ class CategoryItemLayoutFoo extends TableRow {
 		checkBoxes = new ArrayList<TextView>();
 		allChecked = true;
 	}
-
-	public void addCategory(Category category, boolean packed, RunListFragments rlf) {
-		LinearLayout layout = new LinearLayout(this.getContext());
-		layout.setOrientation(LinearLayout.VERTICAL);
-		
-		TextView categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
-		categoryName.setPadding(20, 0, 0, 5);
-		categoryName.setText(category.getName());
 //
-//		final  CategoryItemLayoutFoo foo = this;
-//		categoryName.setOnClickListener(new OnClickListener(){
+//	public void addCategory(Category category, boolean packed, RunListFragments rlf) {
+//		LinearLayout layout = new LinearLayout(this.getContext());
+//		layout.setOrientation(LinearLayout.VERTICAL);
+//		
+//		TextView categoryName = new TextView(this.getContext(),null, android.R.attr.textAppearanceLarge);
+//		categoryName.setPadding(20, 0, 0, 5);
+//		categoryName.setText(category.getName());
+////
+////		final  CategoryItemLayoutFoo foo = this;
+////		categoryName.setOnClickListener(new OnClickListener(){
+////
+////			@Override
+////			public void onClick(View v) {
+////				foo.changeAllCheckBoxes();
+////			}});
+//		
+//		View ruler = new View(this.getContext());
+//		ruler.setBackgroundColor(0xFF0000FF);
+//		
+//		layout.addView(categoryName);
+//		layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
+//		layout.addView(createItems(category.getItems(), packed, rlf));
+//		this.items = category.getItems();
+//		this.addView(layout);
+//	}
+////	
+//	private View createItems(List<Item> items, boolean packed, final RunListFragments rlf) {
+//		TableLayout itemLayout = new TableLayout(this.getContext());
+//		for (Item item : items) {
+//			TableRow row = new TableRow(this.getContext());
+//			itemLayout.addView(row);
+//			TextView itemName = new TextView(this.getContext());
+//			row.addView(itemName);
+//			this.checkBoxes.add(itemName);
+//			itemName.setText(item.getName());
+//			itemName.setId(Integer.parseInt(item.getId()));
+//			if ( (packed && item.isPacked()) || (!packed && !item.isPacked()) ) {
+//				itemName.setVisibility(VISIBLE);
+//			} else {
+//				itemName.setVisibility(INVISIBLE);
+//			}
+//			
+//			final Item itemRef = item;
+//			itemName.setOnClickListener(new OnClickListener() {
 //
-//			@Override
-//			public void onClick(View v) {
-//				foo.changeAllCheckBoxes();
-//			}});
-		
-		View ruler = new View(this.getContext());
-		ruler.setBackgroundColor(0xFF0000FF);
-		
-		layout.addView(categoryName);
-		layout.addView(ruler,ViewGroup.LayoutParams.MATCH_PARENT, 2);
-		layout.addView(createItems(category.getItems(), packed, rlf));
-		this.items = category.getItems();
-		this.addView(layout);
-	}
-	
-	private View createItems(List<Item> items, boolean packed, final RunListFragments rlf) {
-		TableLayout itemLayout = new TableLayout(this.getContext());
-		for (Item item : items) {
-			TableRow row = new TableRow(this.getContext());
-			itemLayout.addView(row);
-			TextView itemName = new TextView(this.getContext());
-			row.addView(itemName);
-			this.checkBoxes.add(itemName);
-			itemName.setText(item.getName());
-			itemName.setId(Integer.parseInt(item.getId()));
-			if ( (packed && item.isPacked()) || (!packed && !item.isPacked()) ) {
-				itemName.setVisibility(VISIBLE);
-			} else {
-				itemName.setVisibility(INVISIBLE);
-			}
-			
-			final Item itemRef = item;
-			itemName.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					rlf.toggleItem(itemRef);
-				}
-				
-			});
-//			itemName.setChecked(item.isPacked());
-		}
-		return itemLayout;
-	}
+//				@Override
+//				public void onClick(View v) {
+//					rlf.toggleItem(itemRef);
+//				}
+//				
+//			});
+////			itemName.setChecked(item.isPacked());
+//		}
+//		return itemLayout;
+//	}
 
 	public List<String> getCheckBoxIds() {
 		List<String> checkboxIds = new ArrayList<String>();
