@@ -1,5 +1,6 @@
 package com.timothy.moll.lets.go.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -45,13 +46,15 @@ public class Lists {
 			listId = list.getId();
 			db.updateListName(listId, listName);
 			List<String> removedItems = list.getAllItemIDs();
-			
+			// Use intermediate to remove concurrent modification exceptions
+			List<String> toRemove = new ArrayList<String>();
 			for (String item : removedItems ) {
 				if (items.contains(item)) {
-					removedItems.remove(item);
-					items.remove(item);
+					toRemove.add(item);
 				}
 			}
+			removedItems.removeAll(toRemove);
+			items.removeAll(toRemove);
 			
 			db.addItemsToList(listId, items);
 			db.removeItemsFromList(listId, removedItems);

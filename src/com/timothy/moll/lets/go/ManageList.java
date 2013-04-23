@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +61,10 @@ public class ManageList extends Activity {
 			 save();
 		 case R.id.manage_list_cancel:
 		 case android.R.id.home:
+			 Intent intent = new Intent();
+			 intent.setClassName("com.timothy.moll.lets.go", "com.timothy.moll.lets.go.RunList");
+			 intent.putExtra("ID", this.list.getId());
+			 startActivityForResult(intent, 1);
 			 finish();
 			 break;
        }

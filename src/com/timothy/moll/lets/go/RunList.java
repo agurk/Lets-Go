@@ -80,7 +80,7 @@ public class RunList extends FragmentActivity implements ActionBar.TabListener  
 			 intent.putExtra("ID", this.list.getId());
 			 // TODO: wait for this to finish
 			 startActivityForResult(intent, 1);
-			 
+			 finish();
 //			 reloadList();
 			 break;
 		 case R.id.run_list_delete:
