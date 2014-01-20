@@ -3,4 +3,6 @@
     <item android:id="@+id/add_category" android:title="Add Category"></item>
     <item android:id="@+id/add_item" android:title="Add Item"></item>
     <item android:id="@+id/add_new_list" android:title="Add List"></item>
+    <item android:id="@+id/data_export" android:title="Export Data"></item>
+    <item android:id="@+id/data_import" android:title="Import Data"></item>
 </menu>

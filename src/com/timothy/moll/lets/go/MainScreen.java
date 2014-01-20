@@ -1,5 +1,7 @@
 package com.timothy.moll.lets.go;
 
+import com.timothy.moll.lets.go.import_export.ExportData;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -89,6 +91,14 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
             	break;
             case R.id.add_new_list:
             	loadManageList(null);
+            	break;
+            case R.id.data_export:
+            	ExportData ed = new ExportData(getApplicationContext());
+            	ed.export();
+            	break;
+            case R.id.data_import:
+            	ExportData ed2 = new ExportData(getApplicationContext());
+            	ed2.load();
             	break;
     	}
     	return true;
